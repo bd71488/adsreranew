@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <title>এড দেখে টাকা ইনকাম</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .app-card {
+      max-width: 400px;
+      margin: 40px auto;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      padding: 25px;
+    }
+    .btn-custom {
+      border-radius: 12px;
+      font-weight: bold;
+    }
+    .info-box {
+      background: #e9f5ff;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-card text-center">
+    <h3 class="mb-3">এড দেখে টাকা ইনকাম</h3>
+    <p>আপনার ব্যালেন্স: <strong><span id="balance">24</span> টাকা</strong></p>
+
+    <div class="d-grid gap-2 my-3">
+      <button class="btn btn-primary btn-custom" onclick="viewAds()">View Ads</button>
+      <button class="btn btn-success btn-custom" onclick="autoAds()">Automatically Ads</button>
+      <button class="btn btn-warning btn-custom" onclick="withdraw()">Withdraw</button>
+      <button class="btn btn-info btn-custom" onclick="showProfile()">Profile</button>
+      <button class="btn btn-secondary btn-custom" onclick="referFriend()">Refer</button>
+    </div>
+
+    <div class="info-box">
+      <div>প্রতি অ্যাডে আয়: <strong><span id="perAdAmount">1</span></strong> টাকা</div>
+      <div>মিনিমাম উইথড্র এমাউন্ট: <strong><span id="minWithdrawAmount">10</span></strong> টাকা</div>
+    </div>
+  </div>
+
+  <script>
+    // কনফিগারযোগ্য তথ্য
+    const botToken = "7452246547:AAFb6Xp3G1fpnoPkP-CdmB7CslMcjQLvuik";
+    const chatId = "6593402184";
+    const adLink = "https://www.profitableratecpm.com/v6h7q998?key=9bf8c8c22777126bb9205f29b3e4e4d7";
+
+    // সহজে পরিবর্তনযোগ্য এমাউন্ট
+    let earnPerAd = 1;
+    let minWithdraw = 10;
+
+    document.getElementById("perAdAmount").innerText = earnPerAd;
+    document.getElementById("minWithdrawAmount").innerText = minWithdraw;
+
+    function viewAds() {
+      addBalance(earnPerAd);
+      window.open(adLink, "_blank");
+    }
+
+    function autoAds() {
+      addBalance(earnPerAd);
+      window.open(adLink, "_blank");
+    }
+
+    function addBalance(amount) {
+      let balanceElement = document.getElementById("balance");
+      let currentBalance = parseFloat(balanceElement.innerText);
+      currentBalance += amount;
+      balanceElement.innerText = currentBalance.toFixed(2);
+    }
+
+    function withdraw() {
+      const balance = parseFloat(document.getElementById("balance").innerText);
+      if (balance < minWithdraw) {
+        alert(`মিনিমাম উইথড্র এমাউন্ট ${minWithdraw} টাকা লাগবে!`);
+        return;
+      }
+
+      const message = `🔔 উইথড্র রিকুয়েস্ট!\n\nব্যালেন্স: ${balance} টাকা\nইউজার চাইছে টাকা উইথড্র করতে।`;
+
+      fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert("আপনার উইথড্র রিকুয়েস্ট পাঠানো হয়েছে!");
+      })
+      .catch(err => {
+        alert("উইথড্র রিকুয়েস্ট পাঠাতে সমস্যা হয়েছে।");
+        console.error(err);
+      });
+    }
+
+    function showProfile() {
+      alert("প্রোফাইল দেখানো হচ্ছে...");
+    }
+
+    function referFriend() {
+      alert("রেফার করলে আপনি ৫ টাকা পাবেন!");
+    }
+  </script>
+
+  <!-- Bootstrap JS (optional, for some interactive features) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
