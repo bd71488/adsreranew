@@ -35,7 +35,7 @@
 <body>
   <div class="app-card text-center">
     <h3 class="mb-3">এড দেখে টাকা ইনকাম</h3>
-    <p>আপনার ব্যালেন্স: <strong><span id="balance">24</span> টাকা</strong></p>
+    <p>আপনার ব্যালেন্স: <strong><span id="balance">0</span> টাকা</strong></p>
 
     <div class="d-grid gap-2 my-3">
       <button class="btn btn-primary btn-custom" onclick="viewAds()">View Ads</button>
@@ -58,8 +58,8 @@
     const adLink = "https://www.profitableratecpm.com/v6h7q998?key=9bf8c8c22777126bb9205f29b3e4e4d7";
 
     // সহজে পরিবর্তনযোগ্য এমাউন্ট
-    let earnPerAd = 1;
-    let minWithdraw = 10;
+    let earnPerAd = 0.20;
+    let minWithdraw = 50;
 
     document.getElementById("perAdAmount").innerText = earnPerAd;
     document.getElementById("minWithdrawAmount").innerText = minWithdraw;
@@ -115,7 +115,7 @@
     }
 
     function referFriend() {
-      alert("রেফার করলে আপনি ৫ টাকা পাবেন!");
+      alert("রেফার করলে আপনি 2 টাকা পাবেন!");
     }
   </script>
 
