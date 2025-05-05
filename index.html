@@ -1,119 +1,88 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Free Income 2025</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <script>
-    // SETTINGS (editable)
-    const settings = {
-      earningPerAd: 0.25, // প্রতি অ্যাডে আয় (টাকা)
-      minWithdraw: 20,    // মিনিমাম উইথড্র এমাউন্ট
-      referBonus: 5       // প্রতি রেফারে আয়
-    };
-
-    const user = {
-      name: "নাম",
-      username: "@username",
-      fakeId: Math.floor(Math.random() * 1000000),
-      balance: 0,
-      totalWithdraw: 0,
-      adsViewed: 0
-    };
-
-    // লোডে ইউজারের ব্যালেন্স ও তথ্য রাখা
-    window.onload = () => {
-      const saved = JSON.parse(localStorage.getItem("user_data"));
-      if (saved) Object.assign(user, saved);
-      updateProfile();
-    };
-
-    function saveUserData() {
-      localStorage.setItem("user_data", JSON.stringify(user));
-    }
-
-    function updateProfile() {
-      document.getElementById("name").innerText = user.name;
-      document.getElementById("username").innerText = user.username;
-      document.getElementById("fakeId").innerText = user.fakeId;
-      document.getElementById("balance").innerText = user.balance.toFixed(2) + ' টাকা';
-      document.getElementById("withdraw").innerText = user.totalWithdraw + ' বার';
-      document.getElementById("adsViewed").innerText = user.adsViewed + ' টি';
-    }
-
-    function viewAd() {
-      window.open("https://your-adsterra-direct-link.com", "_blank");
-      user.balance += settings.earningPerAd;
-      user.adsViewed++;
-      saveUserData();
-      updateProfile();
-    }
-
-    function startAutoAds() {
-      setInterval(viewAd, 10000); // প্রতি ১০ সেকেন্ডে অ্যাড
-    }
-
-    function withdrawRequest() {
-      if (user.balance >= settings.minWithdraw) {
-        Telegram.WebApp.sendData(`withdraw_request:${user.username}:${user.balance}`);
-        alert("উইথড্র রিকোয়েস্ট পাঠানো হয়েছে!");
-        user.totalWithdraw++;
-        user.balance = 0;
-        saveUserData();
-        updateProfile();
-      } else {
-        alert(`উইথড্র করতে হলে মিনিমাম ${settings.minWithdraw} টাকা থাকতে হবে।`);
-      }
-    }
-
-    function generateReferralLink() {
-      const link = `https://t.me/your_bot_username?start=${user.fakeId}`;
-      prompt("আপনার রেফার লিংক:", link);
-    }
-  </script>
   <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-      background: #f1f5f9;
-      color: #111;
-    }
-    button {
-      display: block;
-      margin: 10px 0;
-      padding: 12px;
-      background: #1d4ed8;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .card {
-      background: white;
-      padding: 15px;
-      border-radius: 12px;
-      margin-bottom: 15px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
+    body { font-family: Arial; text-align: center; padding: 20px; background: #f4f4f4; }
+    button { margin: 10px; padding: 10px 20px; font-size: 16px; border-radius: 8px; border: none; background: #007bff; color: white; }
+    button:disabled { background: #ccc; }
+    .section { display: none; margin-top: 20px; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    input { padding: 10px; width: 80%; border-radius: 6px; margin: 10px 0; border: 1px solid #ccc; }
   </style>
 </head>
 <body>
   <h1>Free Income 2025</h1>
-  <div class="card">
-    <h2>প্রোফাইল</h2>
-    <p>নাম: <span id="name"></span></p>
-    <p>ইউজারনেম: <span id="username"></span></p>
-    <p>ফেক আইডি: <span id="fakeId"></span></p>
-    <p>ব্যালেন্স: <span id="balance"></span></p>
-    <p>মোট উইথড্র: <span id="withdraw"></span></p>
-    <p>মোট অ্যাড দেখা: <span id="adsViewed"></span></p>
-  </div>
-  <button onclick="viewAd()">ভিউ অ্যাড</button>
-  <button onclick="startAutoAds()">অটো অ্যাড শুরু করুন</button>
-  <button onclick="withdrawRequest()">উইথড্র</button>
-  <button onclick="generateReferralLink()">রেফার লিংক</button>
-</body>
-</html>
 
+  <button onclick="showAccountActive()">Account Active</button>
+  <button onclick="showMyJob()">My Job</button>
+  <button onclick="showWithdraw()">Withdraw</button>
+  <button onclick="showRefer()">Refer</button>
+
+  <!-- Account Active Section -->
+  <div id="accountActive" class="section">
+    <h3>Send Payment to:</h3>
+    <p>Bkash: <strong id="bkashNumber">01XXXXXXXXX</strong></p>
+    <p>Nagad: <strong id="nagadNumber">01YYYYYYYYY</strong></p>
+    <input type="text" id="trxID" placeholder="Enter Transaction ID" />
+    <button onclick="activateAccount()">Submit</button>
+    <p id="accountMsg"></p>
+  </div>
+
+  <!-- My Job Section -->
+  <div id="myJob" class="section">
+    <p id="jobText"></p>
+    <button onclick="completeJob()" id="jobBtn">Complete Job (+5 Taka)</button>
+    <p id="jobMsg"></p>
+  </div>
+
+  <!-- Withdraw Section -->
+  <div id="withdraw" class="section">
+    <p>Your Balance: <span id="balance">0</span> Taka</p>
+    <input type="text" id="withdrawNumber" placeholder="Enter Bkash/Nagad Number" />
+    <button onclick="withdrawMoney()">Withdraw</button>
+    <p id="withdrawMsg"></p>
+  </div>
+
+  <!-- Refer Section -->
+  <div id="refer" class="section">
+    <p>Your Referral Link:</p>
+    <input type="text" id="referLink" value="https://t.me/YourBot?start=123456" readonly />
+    <p>Referral Bonus: <span id="refBonus">10</span> Taka (editable in HTML)</p>
+  </div>
+
+  <script>
+    let balance = parseInt(localStorage.getItem('balance')) || 0;
+    let accountActive = localStorage.getItem('accountActive') === 'true';
+    let lastJobTime = parseInt(localStorage.getItem('lastJobTime')) || 0;
+
+    function updateBalanceDisplay() {
+      document.getElementById('balance').textContent = balance;
+    }
+
+    function hideAll() {
+      document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+    }
+
+    function showAccountActive() {
+      hideAll();
+      document.getElementById('accountActive').style.display = 'block';
+    }
+
+    function showMyJob() {
+      hideAll();
+      const now = Date.now();
+      const twelveHours = 12 * 60 * 60 * 1000;
+      const jobBtn = document.getElementById('jobBtn');
+
+      if (now - lastJobTime >= twelveHours) {
+        document.getElementById('jobText').textContent = 'Your Task: Share a post and return here.';
+        jobBtn.disabled = false;
+      } else {
+        let remaining = twelveHours - (now - lastJobTime);
+        let hours = Math.floor(remaining / (60 * 60 * 1000));
+        let minutes = Math.floor((remaining % (60 * 60 * 1000)) / (60 * 1000));
+        document.getElementById('jobText').textContent = `Next job in ${hours}h ${minutes}m`;
+        jobBtn.disabled = true;
+      }
+
+      document.getElementB
