@@ -1,1 +1,119 @@
-https://bd71488.github.io/adsreranew/?ref=demo_user
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Income 2025</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    // SETTINGS (editable)
+    const settings = {
+      earningPerAd: 0.25, // প্রতি অ্যাডে আয় (টাকা)
+      minWithdraw: 20,    // মিনিমাম উইথড্র এমাউন্ট
+      referBonus: 5       // প্রতি রেফারে আয়
+    };
+
+    const user = {
+      name: "নাম",
+      username: "@username",
+      fakeId: Math.floor(Math.random() * 1000000),
+      balance: 0,
+      totalWithdraw: 0,
+      adsViewed: 0
+    };
+
+    // লোডে ইউজারের ব্যালেন্স ও তথ্য রাখা
+    window.onload = () => {
+      const saved = JSON.parse(localStorage.getItem("user_data"));
+      if (saved) Object.assign(user, saved);
+      updateProfile();
+    };
+
+    function saveUserData() {
+      localStorage.setItem("user_data", JSON.stringify(user));
+    }
+
+    function updateProfile() {
+      document.getElementById("name").innerText = user.name;
+      document.getElementById("username").innerText = user.username;
+      document.getElementById("fakeId").innerText = user.fakeId;
+      document.getElementById("balance").innerText = user.balance.toFixed(2) + ' টাকা';
+      document.getElementById("withdraw").innerText = user.totalWithdraw + ' বার';
+      document.getElementById("adsViewed").innerText = user.adsViewed + ' টি';
+    }
+
+    function viewAd() {
+      window.open("https://your-adsterra-direct-link.com", "_blank");
+      user.balance += settings.earningPerAd;
+      user.adsViewed++;
+      saveUserData();
+      updateProfile();
+    }
+
+    function startAutoAds() {
+      setInterval(viewAd, 10000); // প্রতি ১০ সেকেন্ডে অ্যাড
+    }
+
+    function withdrawRequest() {
+      if (user.balance >= settings.minWithdraw) {
+        Telegram.WebApp.sendData(`withdraw_request:${user.username}:${user.balance}`);
+        alert("উইথড্র রিকোয়েস্ট পাঠানো হয়েছে!");
+        user.totalWithdraw++;
+        user.balance = 0;
+        saveUserData();
+        updateProfile();
+      } else {
+        alert(`উইথড্র করতে হলে মিনিমাম ${settings.minWithdraw} টাকা থাকতে হবে।`);
+      }
+    }
+
+    function generateReferralLink() {
+      const link = `https://t.me/your_bot_username?start=${user.fakeId}`;
+      prompt("আপনার রেফার লিংক:", link);
+    }
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f1f5f9;
+      color: #111;
+    }
+    button {
+      display: block;
+      margin: 10px 0;
+      padding: 12px;
+      background: #1d4ed8;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>Free Income 2025</h1>
+  <div class="card">
+    <h2>প্রোফাইল</h2>
+    <p>নাম: <span id="name"></span></p>
+    <p>ইউজারনেম: <span id="username"></span></p>
+    <p>ফেক আইডি: <span id="fakeId"></span></p>
+    <p>ব্যালেন্স: <span id="balance"></span></p>
+    <p>মোট উইথড্র: <span id="withdraw"></span></p>
+    <p>মোট অ্যাড দেখা: <span id="adsViewed"></span></p>
+  </div>
+  <button onclick="viewAd()">ভিউ অ্যাড</button>
+  <button onclick="startAutoAds()">অটো অ্যাড শুরু করুন</button>
+  <button onclick="withdrawRequest()">উইথড্র</button>
+  <button onclick="generateReferralLink()">রেফার লিংক</button>
+</body>
+</html>
+
